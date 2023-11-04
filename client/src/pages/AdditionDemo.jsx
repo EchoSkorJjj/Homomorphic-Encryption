@@ -45,7 +45,7 @@ function AdditionDemo() {
         <div className="row text-center">
           <h1>Paillier Cryptosystem</h1>
         </div>
-        <div className="row">
+        <div className="row d-flex justify-content-center">
           <div className="col-md-6">
             <div className="form-group">
               <label htmlFor="age">Age:</label>
@@ -114,8 +114,8 @@ function AdditionDemo() {
           </div>
         </div>
         {result && (
-          <div className="row">
-            <div className="col-md-8">
+          <div className="row d-flex justify-content-center mt-3">
+            <div className="col-12">
                 <ResultTable
                     encrypted_original_data={result.encrypted_original_data}
                     encrypted_additional_data={result.encrypted_additional_data}

@@ -2,9 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const paillierBigint = require('paillier-bigint')
 const bigintConversion = require('bigint-conversion')
+const mongoose = require('mongoose');
+const User = require('./models/userModel');
 
+require('dotenv').config();
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const mongoString = process.env.DATABASE_URL
+
 app.use(cors(
     {
         origin: 'http://localhost:5173',
@@ -66,34 +71,83 @@ async function startServer() {
             };
             res.json(response);
         });
-        
-        const votes = [];
 
-        app.post('/vote', (req, res) => {
-            const encryptedVote = new paillierBigint.EncryptedNumber(publicKey, BigInt(req.body.vote), BigInt(req.body.exponent));
-            votes.push(encryptedVote);
-            res.json({ success: true });
-        });
+        app.post('/vote', async (req, res) => {
+            try {
+                const encryptedVote = req.body.encryptedVote;
+                const name = req.body.name;
 
-        app.get('/tally', (req, res) => {
-    
-            let sumVotes = publicKey.encrypt(BigInt(0));
+                const user = await User.findOne({ name: name });
+                if (user) {
+                    return res.status(400).json({ message: 'This name has already submitted a vote.' });
+                }
 
-            for (const vote of votes) {
-                sumVotes = publicKey.addition(sumVotes, vote);
+                const newUser = new User({
+                    name: name,
+                    vote: encryptedVote
+                });
+
+                await newUser.save();
+                
+                res.status(200).json({ message: 'Voting Success' });
+            } catch (error) {
+                res.status(400).json({ message: 'Invalid vote format' });
             }
-
-            const result = privateKey.decrypt(sumVotes);
-            res.json({ total: result.toString() });
         });
 
+        app.post('/checkvote', async (req, res) => {
+            try {
+                const { encryptedVote } = req.body;
+                const nonHexVote = bigintConversion.hexToBigint(encryptedVote);
+                const vote = privateKey.decrypt(nonHexVote);
+                const voteHex = vote.toString();
+                res.status(200).json({ voteHex: voteHex});
+            } catch {
+                res.status(400).json({ message: 'Invalid vote format' });
+            }
+        });
+
+        app.get('/tally', async (req, res) => {
+            try {
+                const users = await User.find({});
+                const allVotes = users.map((user) => {
+                    return {
+                        name: user.name,
+                        vote: user.vote
+                    }
+                });
+                const sumVotes = users.reduce((acc, user) => publicKey.addition(acc, bigintConversion.hexToBigint(user.vote)), publicKey.encrypt(BigInt(0)));
+                const totalForOptionOne = privateKey.decrypt(sumVotes);
+                const optionOne = totalForOptionOne.toString()
+                const totalVotes = users.length;
+                const optionTwo = totalVotes - optionOne;
+                res.json({optionOne: optionOne, optionTwo: optionTwo, allVotes: allVotes, sumVotes: sumVotes.toString() });
+            } catch (error) {
+                res.status(500).json({ message: 'Error tallying the votes' });
+            }
+        });
+        
         app.get('/public_key', (req, res) => {
-            res.json({ n: publicKey.n.toString() });
+            try {
+                res.status(200).json({n: publicKey.n.toString(),g: publicKey.g.toString()});
+            } catch (error) {
+                res.status(500).json({ message: 'Error getting the public key', error: error.message });
+            }
         });
-
+        
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
+
+        mongoose.connect(mongoString);
+        const database = mongoose.connection
+
+        database.on('error', (error) => {
+            console.log(error)
+        })
+        database.once('connected', () => {
+            console.log('Database Connected');
+        })
     } catch (error) {
       console.error("Error during key generation or server start:", error);
     }
