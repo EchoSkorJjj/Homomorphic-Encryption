@@ -11,12 +11,13 @@ import usePublicKeyStore from './store/PublicKeyStore.jsx';
 import axios from 'axios';
 
 function App() {
+  const base_url = import.meta.env.VITE_NODE_ENV === 'production' ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_DEVELOPMENT_URL;
   const setPublicKeyData = usePublicKeyStore((state) => state.setPublicKeyData)
 
   useEffect(() => {
     const fetchPublicKey = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/public_key');
+            const response = await axios.get(`${base_url}/public_key`);
             const { n, g } = response.data;
 
             setPublicKeyData({

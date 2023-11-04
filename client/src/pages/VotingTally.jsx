@@ -18,9 +18,11 @@ export default function VotingTally() {
         return str.length <= maxLength ? str : `${str.slice(0, maxLength - 3)}...`;
     };
 
+    const base_url = import.meta.env.VITE_NODE_ENV === 'production' ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_DEVELOPMENT_URL;
+
     async function getTotalVote() {
         try {
-            const response = await axios.get('http://localhost:3000/tally');
+            const response = await axios.get(`${base_url}/tally`);
             const { optionOne, optionTwo, allVotes, sumVotes } = response.data;
             setAllVotes(allVotes);
             setSumVotes(sumVotes);

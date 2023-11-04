@@ -3,6 +3,7 @@ import axios from 'axios';
 import ResultTable from '../components/ResultTable.jsx';
 
 function AdditionDemo() {
+    const base_url = import.meta.env.VITE_NODE_ENV === 'production' ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_DEVELOPMENT_URL;
     const [inputData, setInputData] = useState({
       age: '',
       height: '',
@@ -31,7 +32,7 @@ function AdditionDemo() {
             additional_data: additionalData,
         };
   
-        axios.post('http://127.0.0.1:3000/perform', requestData)
+        axios.post(`${base_url}/perform`, requestData)
         .then(response => {
             setResult(response.data);
         })

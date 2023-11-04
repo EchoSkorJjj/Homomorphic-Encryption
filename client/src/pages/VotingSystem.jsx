@@ -7,6 +7,7 @@ import Mallory from '../assets/mallory.png';
 import usePublicKeyStore from '../store/PublicKeyStore';
 
 export default function Vote() {
+    const base_url = import.meta.env.VITE_NODE_ENV === 'production' ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_DEVELOPMENT_URL;
     const [vote, setVote] = useState('');
     const [name, setName] = useState('');
     const [encryptedVote, setEncryptedVote] = useState('');
@@ -58,7 +59,7 @@ export default function Vote() {
         try {
             setMessage('');
             setErrorMessage('');
-            const response = await axios.post("http://localhost:3000/checkvote", {
+            const response = await axios.post(`${base_url}/checkvote`, {
                 encryptedVote: encryptedVote
             })
             if (response.status === 200) {
@@ -96,7 +97,7 @@ export default function Vote() {
                 setErrorMessage('Please enter a valid vote.');
                 return;
             }
-            const response = await axios.post('http://localhost:3000/vote', {
+            const response = await axios.post(`${base_url}/vote`, {
                 encryptedVote: encryptedVote,
                 name: name,
             });
