@@ -12,7 +12,7 @@ const mongoString = process.env.DATABASE_URL
 
 app.use(cors(
     {
-        origin: ['http://localhost:5173', "https://homomorphic-client-1b6da9f7f22d.herokuapp.com/"],
+        origin: ['http://localhost:5173', "https://homomorphic-client-1b6da9f7f22d.herokuapp.com/", "https://homomorphic-client-1b6da9f7f22d.herokuapp.com"],
     }
 ));
 app.use(express.urlencoded({ extended: true }));
