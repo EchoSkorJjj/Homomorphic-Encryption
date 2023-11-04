@@ -60,14 +60,14 @@ export default function VotingTally() {
                 </div>
             </div>
             <button className="btn btn-primary" onClick={getTotalVote}>Get Total Vote</button>
-            <div className='row mt-4 d-flex justify-content-center'>
+            {aliceCount && <div className='row mt-4 d-flex justify-content-center'>
                 <div className="col-6 text-center">
                     <h2 className='fw-bold fs-1'>Total vote calculated from server</h2>
                     <div style={{ maxHeight: '200px', overflowY: 'auto', wordWrap: 'break-word' }}>
                         <pre>{sumVotes}</pre>
                     </div>
                 </div>
-            </div>
+            </div>}
             <div className="table-responsive mt-5" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 <table className="table">
                     <thead>
