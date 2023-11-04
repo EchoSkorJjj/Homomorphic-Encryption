@@ -5,7 +5,6 @@ const bigintConversion = require('bigint-conversion')
 const mongoose = require('mongoose');
 const User = require('./models/userModel');
 
-
 require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,7 +12,7 @@ const mongoString = process.env.DATABASE_URL
 
 app.use(cors(
     {
-        origin: 'http://localhost:5173',
+        origin: ['http://localhost:5173', "https://homomorphic-client-1b6da9f7f22d.herokuapp.com/"],
     }
 ));
 app.use(express.urlencoded({ extended: true }));
