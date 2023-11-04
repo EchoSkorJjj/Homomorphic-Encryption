@@ -21,7 +21,7 @@ jobs:
       run: |
         echo "VITE_DEVELOPMENT_URL=${{ secrets.VITE_DEVELOPMENT_URL }}" > ./client/.env.production
         echo "VITE_PRODUCTION_URL=${{ secrets.VITE_PRODUCTION_URL }}" >> ./client/.env.production
-        echo "VITE_NODE_ENV=${{ secrets.NODE_ENV }}" >> ./client/.env.production
+        echo "VITE_NODE_ENV=${{ secrets.VITE_NODE_ENV }}" >> ./client/.env.production
 
     - name: Build, Push and release Docker Image to Heroku
       uses: gonuit/heroku-docker-deploy@v1.3.3
