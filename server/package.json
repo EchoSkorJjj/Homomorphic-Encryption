@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev": "nodemonserver"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bigint-conversion": "^2.4.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "paillier-bigint": "^3.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,103 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paillier Cryptosystem</title>
-</head>
-<body>
-    <h1>Paillier Cryptosystem</h1>
-
-    Age: <input type="number" id="age"><br>
-    Height: <input type="number" id="height"><br>
-    Weight: <input type="number" id="weight"><br>
-
-    Add to Age: <input type="number" id="add_age" value="0"><br>
-    Add to Height: <input type="number" id="add_height" value="0"><br>
-    Add to Weight: <input type="number" id="add_weight" value="0"><br>
-
-    <button onclick="performOperation()">Perform Operation and Show Details</button>
-
-    <div id="output"></div>
-
-    <script>
-        function getInputData() {
-            return {
-                age: parseInt(document.getElementById('age').value, 10),
-                height: parseFloat(document.getElementById('height').value),
-                weight: parseFloat(document.getElementById('weight').value)
-            };
-        }
-
-        function getAdditionalValues() {
-            return {
-                add_age: parseInt(document.getElementById('add_age').value, 10),
-                add_height: parseFloat(document.getElementById('add_height').value),
-                add_weight: parseFloat(document.getElementById('add_weight').value)
-            };
-        }
-
-        function performOperation() {
-            const inputData = getInputData();
-            const additionalData = getAdditionalValues();
-
-            const requestData = {
-                data: inputData,
-                additional_data: additionalData
-            };
-
-            fetch('http://127.0.0.1:5000/perform', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Operation Data:', data);
-                const outputDiv = document.getElementById('output');
-                outputDiv.innerHTML = formatOutput(data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-
-        function formatOutput(data) {
-            return `
-                <h2>Original Encrypted Data</h2>
-                ${formatDataSection(data.encrypted_original_data)}
-                <h2>Additional Encrypted Data</h2>
-                ${formatDataSection(data.encrypted_additional_data)}
-                <h2>Encrypted Sums</h2>
-                ${formatEncryptedSums(data.encrypted_sum)}
-                <h2>Decrypted Sums</h2>
-                ${formatDecryptedSums(data.decrypted_sum)}
-            `;
-        }
-
-        function formatDataSection(data) {
-            return Object.keys(data).map(key => {
-                const { value, encrypted, serialized } = data[key];
-                return `<p><strong>${key.replace('add_', '')}:</strong> ${value}
-                        <br>Encrypted: ${encrypted.ciphertext} (Exponent: ${encrypted.exponent})
-                        `;
-            }).join('');
-        }
-
-        function formatEncryptedSums(data) {
-            return Object.keys(data).map(key => {
-                return `<p><strong>Sum of ${key}:</strong> ${data[key]}</p>`;
-            }).join('');
-        }
-
-        function formatDecryptedSums(data) {
-            return Object.entries(data).map(([key, value]) => {
-                return `<p><strong>${key} after addition:</strong> ${value}</p>`;
-            }).join('');
-        }
-
-    </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
