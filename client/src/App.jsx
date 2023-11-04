@@ -13,6 +13,7 @@ import axios from 'axios';
 function App() {
   const base_url = import.meta.env.VITE_NODE_ENV === 'production' ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_DEVELOPMENT_URL;
   const setPublicKeyData = usePublicKeyStore((state) => state.setPublicKeyData)
+  
   useEffect(() => {
     const fetchPublicKey = async () => {
         try {
