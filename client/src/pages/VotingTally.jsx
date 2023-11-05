@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import * as bigintConversion from 'bigint-conversion';
-import * as paillierBigint from 'paillier-bigint'
 import Alice from '../assets/alice.png';
 import Mallory from '../assets/mallory.png';
-import usePublicKeyStore from '../store/PublicKeyStore';
 
 export default function VotingTally() {
     const [aliceStatus, setAliceStatus] = useState('');
@@ -19,6 +16,19 @@ export default function VotingTally() {
     };
 
     const base_url = import.meta.env.VITE_NODE_ENV === 'production' ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_DEVELOPMENT_URL;
+
+    useEffect(() => {
+        async function getAllVotes() {
+            try {
+                const response = await axios.get(`${base_url}/getallvotes`);
+                const { allVotes } = response.data;
+                setAllVotes(allVotes);
+            } catch (error) {
+                console.error('Error fetching all votes:', error);
+            }
+        }
+        getAllVotes();
+    })
 
     async function getTotalVote() {
         try {

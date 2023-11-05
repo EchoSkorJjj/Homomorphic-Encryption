@@ -107,6 +107,21 @@ async function startServer() {
             }
         });
 
+        app.get('/getallvotes', async (req, res) => {
+            try {
+                const users = await User.find({});
+                const allVotes = users.map((user) => {
+                    return {
+                        name: user.name,
+                        vote: user.vote
+                    }
+                });
+                res.status(200).json({allVotes: allVotes});
+            } catch (error) {
+                res.status(500).json({ message: 'Error getting all votes' });
+            }
+        });
+
         app.get('/tally', async (req, res) => {
             try {
                 const users = await User.find({});
